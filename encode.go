@@ -166,6 +166,10 @@ func Marshal(v interface{}) ([]byte, error) {
 	return e.Bytes(), nil
 }
 
+type IsZeroer interface{
+	IsZero() bool
+}
+
 // MarshalIndent is like Marshal but applies Indent to format the output.
 // Each JSON element in the output will begin on a new line beginning with prefix
 // followed by one or more copies of indent according to the indentation nesting.
@@ -319,6 +323,14 @@ func isEmptyValue(v reflect.Value) bool {
 		return v.Float() == 0
 	case reflect.Interface, reflect.Ptr:
 		return v.IsNil()
+	case reflect.Struct:
+		val := v.Interface()
+
+		if z, ok := val.(IsZeroer); ok {
+			return z.IsZero()
+		}
+
+		return reflect.Zero(v.Type()).Interface() == val
 	}
 	return false
 }
