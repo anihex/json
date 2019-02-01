@@ -15,7 +15,6 @@ import (
 	"encoding"
 	"encoding/base64"
 	"fmt"
-	"log"
 	"math"
 	"reflect"
 	"runtime"
@@ -309,7 +308,6 @@ func (e *encodeState) error(err error) {
 }
 
 func isEmptyValue(v reflect.Value) bool {
-	log.Printf("I am %v\n", v)
 	switch v.Kind() {
 	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
 		return v.Len() == 0
